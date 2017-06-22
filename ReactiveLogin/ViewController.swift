@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import ReactiveSwift
+import ReactiveCocoa
 
 class ViewController: UIViewController {
     
@@ -54,11 +56,13 @@ class ViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = UIColor.lightGray
         button.setTitle("Login", for: UIControlState.normal)
-        
+
         button.layer.cornerRadius = 5
         button.layer.masksToBounds = true
         return button
     }()
+    
+    let viewModel = ViewModel()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,6 +78,16 @@ class ViewController: UIViewController {
         
         view.addSubview(loginButton)
         setLoginButton()
+        
+        self.emailTextField.reactive.text <~ self.viewModel.emailAddress
+        self.passwordTextField.reactive.text <~ self.viewModel.password
+        
+        self.viewModel.emailAddress <~ self.emailTextField.reactive.continuousTextValues
+        self.viewModel.password <~ self.passwordTextField.reactive.continuousTextValues
+        
+        self.loginButton.reactive.pressed = CocoaAction(self.viewModel.submit) { [weak self] (button) -> (String?, String?) in
+            return (self?.emailTextField.text, self?.passwordTextField.text)
+        }
         
     }
 
