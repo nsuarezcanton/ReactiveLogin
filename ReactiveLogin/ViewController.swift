@@ -85,6 +85,10 @@ class ViewController: UIViewController {
         self.viewModel.emailAddress <~ self.emailTextField.reactive.continuousTextValues
         self.viewModel.password <~ self.passwordTextField.reactive.continuousTextValues
         
+        self.viewModel.isValid.signal.observeValues { isFormValid in
+            self.loginButton.backgroundColor = isFormValid ? UIColor.green : UIColor.lightGray
+        }
+        
         self.loginButton.reactive.pressed = CocoaAction(self.viewModel.submit) { [weak self] (button) -> (String?, String?) in
             return (self?.emailTextField.text, self?.passwordTextField.text)
         }

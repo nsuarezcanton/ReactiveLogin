@@ -37,7 +37,7 @@ class ViewModel {
         }
         
         self.submit = Action(enabledIf: self.isValid) { input in
-            print("Submit with username \(String(describing: input.0)) and address \(String(describing: input.1))")
+            print("Submit with email \(String(describing: input.0)) and address \(String(describing: input.1))")
             return SignalProducer<String, LoginError>(value: "")
         }
         
